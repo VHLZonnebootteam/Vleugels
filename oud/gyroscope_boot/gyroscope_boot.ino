@@ -78,7 +78,7 @@ void setup() {
 
   Wire.begin();                                                        //Start I2C as master
   Wire.setClock(400000);                                                 // FAST
-  Serial.begin(2000000);                                                 //Use only for debugging
+  Serial.begin(115200);                                                 //Use only for debugging
 
   mcp2515.reset();
   mcp2515.setBitrate(CAN_125KBPS);

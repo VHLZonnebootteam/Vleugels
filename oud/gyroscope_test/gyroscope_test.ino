@@ -74,7 +74,7 @@ void setup() {
 
   Wire.begin();                                                        //Start I2C as master
   Wire.setClock(400000);                                                 // FAST
-  Serial.begin(2000000);                                                 //Use only for debugging
+  Serial.begin(115200);                                                 //Use only for debugging
 
 
   delay(500);
@@ -232,7 +232,7 @@ void write_Serial() {                                                     //Subr
   if (Serial_loop_counter == 5)Serial.print((abs(angle_pitch_buffer) / 10) % 10); //println third number
   if (Serial_loop_counter == 6)Serial.print(".");                            //println decimal point
   if (Serial_loop_counter == 7)Serial.println(abs(angle_pitch_buffer) % 10);   //println decimal number
-/*
+
   if (Serial_loop_counter == 8) {
     angle_roll_buffer = angle_roll_output * 10;
     //  Serial.setCursor(6,1);
@@ -247,7 +247,7 @@ void write_Serial() {                                                     //Subr
   if (Serial_loop_counter == 12)Serial.print((abs(angle_roll_buffer) / 10) % 10); //println third number
   if (Serial_loop_counter == 13)Serial.print(".");                           //println decimal point
   if (Serial_loop_counter == 14)Serial.println(abs(angle_roll_buffer) % 10);   //println decimal number
-*/
+
 }
 
 void setup_mpu_6050_registers() {
