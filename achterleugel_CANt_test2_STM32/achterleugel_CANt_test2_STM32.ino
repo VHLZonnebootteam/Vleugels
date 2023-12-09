@@ -1,8 +1,8 @@
 #include "DualVNH5019MotorShield.h"
-//#include "can.h"
-//#include "mcp2515.h"
+#include "can.h"
+#include "mcp2515.h"
 
-//#define HOME_DEBUG
+#define HOME_DEBUG
 
 MCP2515 mcp2515(PB12);  //compleet willekeurige pin want ER WAS NOG GEEN PIN
 DualVNH5019MotorShield md(7, 8, 9, 6, A1, 7, 8, 10, 6, A1);
@@ -263,8 +263,8 @@ void loop() {
   if (timer - last_serial_print >= serial_print_interval) {
     last_serial_print = timer;
 
-  //  Serial.println(encoder_pulsen);
-    /*
+   Serial.println(encoder_pulsen);
+    
     Serial.print(overcurrent_limit);
     Serial.print(" - ");
     Serial.print(amps);
@@ -272,7 +272,7 @@ void loop() {
     Serial.print(CAN_setpoint_pulsen);
     Serial.print(" - ");
     Serial.println(PWM);
-    */
+  
     /*
       P = constrain(P, -400, 400);
       //D = constrain(D, -400, 400);
