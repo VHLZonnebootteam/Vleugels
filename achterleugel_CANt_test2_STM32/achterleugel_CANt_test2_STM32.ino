@@ -1,3 +1,4 @@
+// libraries needed: Adafruit MCP2515, DualVNH5019MotorShield,
 #include "DualVNH5019MotorShield.h"
 #include "can.h"
 #include "mcp2515.h"
