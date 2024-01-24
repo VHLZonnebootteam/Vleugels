@@ -31,8 +31,8 @@ const uint8_t PID_interval = 10;             // iedere 10ms wordt de PID bereken
 const uint8_t CAN_send_interval = 10;        // de CAN berichten worden 100x per seconden verzonden.
 const uint16_t CAN_read_interval = 50;       // de CAN berichten worden 20x per seconden ontvangen.
 
-const uint16_t CAN_ID_Setpoint_PWM = 50;  // CAN ID van setpoint_PWM
-const uint16_t CAN_ID_amps_achter = 250;  // CAN ID van CAN_ID_amps_achter
+const uint16_t CAN_ID = 50;  // CAN ID van setpoint_PWM
+//const uint16_t CAN_ID_amps_achter = 250;  // CAN ID van CAN_ID_amps_achter
 const uint16_t CAN_ID_home_achter = 300;  // CAN ID van home_achter
 
 volatile int encoder_pulsen = 0;
@@ -378,7 +378,7 @@ void send_CAN_setpoint_PWM() {
   for (uint8_t i = 0; i < sizeof(int16_t); i++) {  //basic counter
     ret.data[i] = bytes[i];                        //copy the data from bytes to their respective location in ret.bytes
   }
-  ret.can_id = CAN_ID_Setpoint_PWM;  //set the can id of "ret" to our can id
+  ret.can_id = CAN_ID;  //set the can id of "ret" to our can id
   ret.can_dlc = sizeof(int16_t);     //set the dlc to the size of our data type (int16)
   //  return ret; //return the frame
   mcp2515.sendMessage(&ret);  //we send the setpoint_PWM as set by the PID to can ID 51
@@ -390,7 +390,7 @@ void send_CAN_current() {
   for (uint8_t i = 0; i < sizeof(uint16_t); i++) {  //basic counter
     ret.data[i] = bytes[i];                         //copy the data from bytes to their respective location in ret.bytes
   }
-  ret.can_id = CAN_ID_amps_achter;  //set the can id of "ret" to our can id
+  ret.can_id = CAN_ID;  //set the can id of "ret" to our can id
   ret.can_dlc = sizeof(uint16_t);   //set the dlc to the size of our data type (int16)
   //  return ret; //return the frame
   mcp2515.sendMessage(&ret);  //we send the setpoint_PWM as set by the PID to can ID 51
