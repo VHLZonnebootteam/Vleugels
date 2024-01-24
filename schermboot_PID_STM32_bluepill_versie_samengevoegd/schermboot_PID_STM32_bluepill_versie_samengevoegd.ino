@@ -1,7 +1,8 @@
-//#include <Arduino.h>
+#include <Arduino.h>
 #include "pinmap_bluepill.h"
 #include <SPI.h>
 #include <mcp2515.h>
+#include <LiquidCrystal.h>
 
 enum CAN_netwerk {
   telemetry,
@@ -185,7 +186,7 @@ bool home_rear_foil;
 int16_t has_homed_voor_vleugel;
 int16_t has_homed_achter_vleugel;
 
-#include <LiquidCrystal.h>
+
 LiquidCrystal lcd(RS, E, D4, D5, D6, D7);
 //RunningMedian travelTimeMedian = RunningMedian(medianSize);
 
@@ -200,7 +201,7 @@ void setup() {
 
   lcd.begin(20, 4);  // Switch on the LCD screen
   lcd.setCursor(2, 0);
-  lcd.print F(("VHL-Nordwin"));  // Print these words to my LCD screen
+  lcd.print F(("VHL-Aeres"));  // Print these words to my LCD screen
   lcd.setCursor(1, 2);
   lcd.print F(("Zonnebootteam"));
 
