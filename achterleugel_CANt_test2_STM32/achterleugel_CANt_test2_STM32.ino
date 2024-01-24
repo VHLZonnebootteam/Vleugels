@@ -1,7 +1,12 @@
-// libraries needed: Adafruit MCP2515, DualVNH5019MotorShield,
-#include "DualVNH5019MotorShield.h"
-#include "can.h"
-#include "mcp2515.h"
+/* 
+Board managers needed:
+STM32 MCU based boards [https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json]
+Nucleo-64
+*/
+// Libraries:
+#include "DualVNH5019MotorShield.h" // DualVNH5019MotorShield v3.0.0
+#include "can.h" // 
+#include "mcp2515.h" // 107-Arduino-MCP2515 v1.5.0 & autowp-mcp2515 v1.2.1
 
 #define HOME_DEBUG
 
