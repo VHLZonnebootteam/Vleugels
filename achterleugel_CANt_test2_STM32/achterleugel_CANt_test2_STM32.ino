@@ -8,7 +8,7 @@ Nucleo-64
 #include "can.h" // 
 #include "mcp2515.h" // 107-Arduino-MCP2515 v1.5.0 & autowp-mcp2515 v1.2.1
 
-#define HOME_DEBUG
+//#define HOME_DEBUG
 
 MCP2515 mcp2515(PB12);  //compleet willekeurige pin want ER WAS NOG GEEN PIN
 DualVNH5019MotorShield md(7, 8, 9, 6, A1, 7, 8, 10, 6, A1);
@@ -29,16 +29,16 @@ const uint8_t serial_print_interval = 50;    // tijd tussen de serial prints.
 const uint8_t direction_change_delay = 200;  // tijd die de motor om de rem staat wanneer die van richting verandert.
 const uint8_t PID_interval = 10;             // iedere 10ms wordt de PID berekend. het veranderen van deze waarde heeft invloed op de I en D hou daar rekening mee.
 const uint8_t CAN_send_interval = 10;        // de CAN berichten worden 100x per seconden verzonden.
-const uint16_t CAN_read_interval = 50;     // de CAN berichten worden 1000x per seconden ontvangen.
+const uint16_t CAN_read_interval = 50;     // de CAN berichten worden 20x per seconden ontvangen.
 
-const uint16_t CAN_ID = 50;               // CAN ID van setpoint_PWM
+const uint16_t CAN_ID_Setpoint_PWM = 50;               // CAN ID van setpoint_PWM
 const uint16_t CAN_ID_amps_achter = 250;  // CAN ID van CAN_ID_amps_achter
 const uint16_t CAN_ID_home_achter = 300;  // CAN ID van home_achter
 
 volatile int encoder_pulsen = 0;
 volatile int encoder_pulsen_prev = encoder_pulsen;
 
-uint16_t pot_val = 0;
+//uint16_t pot_val = 0;
 volatile bool ENC_A;
 volatile bool ENC_B;
 
@@ -336,7 +336,7 @@ void setspeed() {
 }
 
 void home() {
-  const static uint8_t min_home_time = 1000;
+  const static uint16_t min_home_time = 1000;
   static uint32_t last_home_time = timer;
 
   if (setpoint_home_PWM == 0) {  // als het homen nog niet begonnen is
@@ -377,7 +377,7 @@ void send_CAN_setpoint_PWM() {
   for (uint8_t i = 0; i < sizeof(int16_t); i++) {  //basic counter
     ret.data[i] = bytes[i];                        //copy the data from bytes to their respective location in ret.bytes
   }
-  ret.can_id = CAN_ID;            //set the can id of "ret" to our can id
+  ret.can_id = CAN_ID_Setpoint_PWM;            //set the can id of "ret" to our can id
   ret.can_dlc = sizeof(int16_t);  //set the dlc to the size of our data type (int16)
   //  return ret; //return the frame
   mcp2515.sendMessage(&ret);  //we send the setpoint_PWM as set by the PID to can ID 51
@@ -389,7 +389,7 @@ void send_CAN_current() {
   for (uint8_t i = 0; i < sizeof(uint16_t); i++) {  //basic counter
     ret.data[i] = bytes[i];                         //copy the data from bytes to their respective location in ret.bytes
   }
-  ret.can_id = CAN_ID;             //set the can id of "ret" to our can id
+  ret.can_id = CAN_ID_amps_achter;             //set the can id of "ret" to our can id
   ret.can_dlc = sizeof(uint16_t);  //set the dlc to the size of our data type (int16)
   //  return ret; //return the frame
   mcp2515.sendMessage(&ret);  //we send the setpoint_PWM as set by the PID to can ID 51
