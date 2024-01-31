@@ -207,7 +207,7 @@ void loop() {
     last_amps_poll = timer;
     amps = amps * 0.96 + md.getM2CurrentMilliamps() * 0.04;
 
-    overcurrent_limit = (-3.8137 * PWM * PWM + 2456.2 * abs(PWM) + 159013) * 0.001 + 3000;  // was +1000
+    overcurrent_limit = (-3.8137 * PWM * PWM + 2456.2 * abs(PWM) + 159013) * 0.001 + 2500;  // was +3000
     if (amps > overcurrent_limit) {
       overcurrent = true;
       md.setM2Brake(400);
@@ -270,7 +270,7 @@ void loop() {
   if (timer - last_serial_print >= serial_print_interval) {
     last_serial_print = timer;
 
-    Serial.println(encoder_pulsen);
+    // Serial.println(encoder_pulsen);
 
     Serial.print(overcurrent_limit);
     Serial.print(" - ");
@@ -315,8 +315,14 @@ void loop() {
 
 #endif
   //============================================== send/read can data ===========================================================================
+  if (timer - last_CAN_send >= CAN_send_interval) {
+    last_CAN_send = timer;
 
+    int_to_frame_thrice(setpoint_PWM, amps, has_homed, CAN_ID);
+  }
   //=========================== send_CAN_setpoint_PWM
+
+
   //send_CAN_setpoint_PWM();
 
   //========================= send current
@@ -378,8 +384,8 @@ void send_CAN_setpoint_PWM() {
   for (uint8_t i = 0; i < sizeof(int16_t); i++) {  //basic counter
     ret.data[i] = bytes[i];                        //copy the data from bytes to their respective location in ret.bytes
   }
-  ret.can_id = CAN_ID;  //set the can id of "ret" to our can id
-  ret.can_dlc = sizeof(int16_t);     //set the dlc to the size of our data type (int16)
+  ret.can_id = CAN_ID;            //set the can id of "ret" to our can id
+  ret.can_dlc = sizeof(int16_t);  //set the dlc to the size of our data type (int16)
   //  return ret; //return the frame
   mcp2515.sendMessage(&ret);  //we send the setpoint_PWM as set by the PID to can ID 51
 }
@@ -390,25 +396,25 @@ void send_CAN_current() {
   for (uint8_t i = 0; i < sizeof(uint16_t); i++) {  //basic counter
     ret.data[i] = bytes[i];                         //copy the data from bytes to their respective location in ret.bytes
   }
-  ret.can_id = CAN_ID;  //set the can id of "ret" to our can id
-  ret.can_dlc = sizeof(uint16_t);   //set the dlc to the size of our data type (int16)
+  ret.can_id = CAN_ID;             //set the can id of "ret" to our can id
+  ret.can_dlc = sizeof(uint16_t);  //set the dlc to the size of our data type (int16)
   //  return ret; //return the frame
   mcp2515.sendMessage(&ret);  //we send the setpoint_PWM as set by the PID to can ID 51
 }
 
 void read_CAN_data() {
   if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK) {
-    Serial.print("CAN frame id: ");
-    Serial.println(canMsg.can_id);
+    //Serial.print("CAN frame id: ");
+    //Serial.println(canMsg.can_id);
     if (canMsg.can_id == 0xC8) {  //is can msg ID is 200 in hex
-      Serial.print("CAN frame setpulsen: ");
+      //Serial.print("CAN frame setpulsen: ");
       CAN_setpoint_pulsen = int16_from_can(canMsg.data[4], canMsg.data[5]);  //byte 4-5 is int16_t pulsen achter
-      Serial.println(CAN_setpoint_pulsen);
+      //Serial.println(CAN_setpoint_pulsen);
     }
     if (canMsg.can_id == 0x12c) {  //300
       homeing = canMsg.data[0];    // byte 0 is bool homen achter
-      Serial.print("CAN frame homing: ");
-      Serial.println(homeing);
+      //Serial.print("CAN frame homing: ");
+      //Serial.println(homeing);
     }
   }
 }
@@ -433,3 +439,20 @@ int16_t int16_from_can(uint8_t b1, uint8_t b2) {
   return ret;
 }
 
+can_frame int_to_frame_thrice(int16_t i16_1, int16_t i16_2, int16_t i16_3, uint16_t can_id) {
+  byte bytes[sizeof(int16_t) * 4];
+  memcpy(bytes, &i16_1, sizeof(int16_t));
+  memcpy(bytes + sizeof(int16_t), &i16_2, sizeof(int16_t));
+  memcpy(bytes + sizeof(int16_t) * 2, &i16_3, sizeof(int16_t));
+  // memcpy(bytes + sizeof(int16_t) * 3, &i16_4, sizeof(int16_t));
+  can_frame ret;
+  for (uint8_t i = 0; i < sizeof(int16_t) * 3; i++) {
+    ret.data[i] = bytes[i];
+  }
+  ret.can_id = can_id;
+  ret.can_dlc = sizeof(int16_t) * 4;
+
+  mcp2515.sendMessage(&ret);
+
+  return ret;
+}

@@ -497,7 +497,10 @@ void loop() {
   }
 
   //============================================== send/read can data ===========================================================================
-
+  if (timer - last_CAN_send_PWM > CAN_send_PWM_interval){
+    last_CAN_send_PWM = timer;
+    int_to_frame_thrice(setpoint_PWM_links, setpoint_PWM_rechts, has_homed, CAN_ID);
+  }
   //=========================== send_CAN_setpoint_PWM
   if (timer - last_CAN_send_PWM > CAN_send_PWM_interval){
   last_CAN_send_PWM = timer;
@@ -644,3 +647,22 @@ int16_t int16_from_can(uint8_t b1, uint8_t b2) {
   ret = b1 | (int16_t)b2 << 8;
   return ret;
 }
+
+can_frame int_to_frame_thrice(int16_t i16_1, int16_t i16_2, int16_t i16_3, uint16_t can_id) {
+  byte bytes[sizeof(int16_t) * 4];
+  memcpy(bytes, &i16_1, sizeof(int16_t));
+  memcpy(bytes + sizeof(int16_t), &i16_2, sizeof(int16_t));
+  memcpy(bytes + sizeof(int16_t) * 2, &i16_3, sizeof(int16_t));
+  // memcpy(bytes + sizeof(int16_t) * 3, &i16_4, sizeof(int16_t));
+  can_frame ret;
+  for (uint8_t i = 0; i < sizeof(int16_t) * 3; i++) {
+    ret.data[i] = bytes[i];
+  }
+  ret.can_id = can_id;
+  ret.can_dlc = sizeof(int16_t) * 4;
+
+  mcp2515.sendMessage(&ret);
+
+  return ret;
+}
+

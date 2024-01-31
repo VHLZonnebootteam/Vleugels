@@ -420,8 +420,8 @@ void read_CAN_data() {
       mcp2515_telemetry.sendMessage(&ret);  // verstuur pitch en roll door naar de telemetry
     }
   } else if (canMsg.can_id == 0x34) {                             // CAN ID 52
-    PWM_links = int16_from_can(canMsg.data[0], canMsg.data[1]);   // byte 0-1 is int16_t amps links
-    PWM_rechts = int16_from_can(canMsg.data[2], canMsg.data[3]);  // byte 0-1 is int16_t amps rechts
+    //PWM_links = int16_from_can(canMsg.data[0], canMsg.data[1]);   // byte 0-1 is int16_t amps links
+    //PWM_rechts = int16_from_can(canMsg.data[2], canMsg.data[3]);  // byte 0-1 is int16_t amps rechts
     last_Vvl_online_millis = millis();
 
   } else if (canMsg.can_id == 0x33) {                             // CAN ID 51
