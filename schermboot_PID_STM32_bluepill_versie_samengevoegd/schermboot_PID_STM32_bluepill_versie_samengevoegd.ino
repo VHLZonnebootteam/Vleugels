@@ -296,7 +296,7 @@ void loop() {
     computePid_Avl();
     computePid_balans();
 
-/*
+    /*
     Serial.print(millis() - last_PID_compute_time);
     Serial.print(" - ");
     Serial.print(PID_compute_time);
@@ -310,9 +310,9 @@ void loop() {
     Serial.println(pid_actief);
     */
   }
-  if(menu == Menu::MANUALLY && !pid_actief && (millis() - last_manual_time > PID_compute_time)){
+  if (menu == Menu::MANUALLY && !pid_actief && (millis() - last_manual_time > PID_compute_time)) {
     manual();
-last_manual_time = millis();
+    last_manual_time = millis();
   }
 
 
@@ -328,9 +328,9 @@ last_manual_time = millis();
 
   if ((pidChangeDetection != lastPidChangeDetection) && pid_actief) {  // wanneer de PID ingesteld word
     lastPidChangeDetection = pidChangeDetection;
-    if(menu != Menu::DEBUG){
-    pidDisplay();
-    blink_cursor();
+    if (menu != Menu::DEBUG) {
+      pidDisplay();
+      blink_cursor();
     }
   }
 
@@ -419,7 +419,7 @@ void read_CAN_data() {
       ret.can_dlc = sizeof(float) * 2;
       mcp2515_telemetry.sendMessage(&ret);  // verstuur pitch en roll door naar de telemetry
     }
-  } else if (canMsg.can_id == 0x34) {                             // CAN ID 52
+  } else if (canMsg.can_id == 0x34) {  // CAN ID 52
     //PWM_links = int16_from_can(canMsg.data[0], canMsg.data[1]);   // byte 0-1 is int16_t amps links
     //PWM_rechts = int16_from_can(canMsg.data[2], canMsg.data[3]);  // byte 0-1 is int16_t amps rechts
     last_Vvl_online_millis = millis();
@@ -859,18 +859,18 @@ void computeButtonPress() {
       setPitch++;
     }
     pidChangeDetection = setDistance + cursorPlace + kp_Avl + ki_Avl + kd_Avl + setPitch + setRoll;
-  }
-  else if (((buttonAll == 1) && (menu == Menu::MANUALLY)) ){
-  if ((button1 == HIGH)) {
-      hoek_voor_vleugel_manual--; 
+  } else if (((buttonAll == 1) && (menu == Menu::MANUALLY))) {
+    if ((button1 == HIGH)) {
+      hoek_voor_vleugel_manual--;
     } else if ((button2 == HIGH)) {
-      hoek_voor_vleugel_manual++ ;
+      hoek_voor_vleugel_manual++;
     } else if ((button3 == HIGH) && (buttonStateChange3)) {  // if cursor place is at 0 change setDistance
-      hoek_voor_vleugel_manual= hoek_voor_vleugel_manual - 10;
+      hoek_voor_vleugel_manual = hoek_voor_vleugel_manual - 10;
     } else if ((button4 == HIGH) && (buttonStateChange4)) {
-      hoek_voor_vleugel_manual= hoek_voor_vleugel_manual + 10;
+      hoek_voor_vleugel_manual = hoek_voor_vleugel_manual + 10;
     } else if (button_encoder_1 && buttonStateChange_enc_1) {
-      man_actief = !man_actief;}
+      man_actief = !man_actief;
+    }
   }
   cursorPlace = constrain(cursorPlace, 0, 5);
   setDistance = constrain(setDistance, 0, 99);
@@ -890,11 +890,11 @@ void computeButtonPress() {
   setPitch = constrain(setPitch, -99, 999);
 }
 //======================================================================= Manual ===========================================================================================
-void manual(){
+void manual() {
   static uint16_t pulsen_liniear = 0;
   static float afstand_liniear = 0;
-  afstand_liniear = (sqrt(43.2 * 43.2 + 17.2 * 17.2 - 2 * 43.2 * 17.2 * cos((hoek_voor_vleugel_manual/10 + 90.0 - 3) * pi / 180.0))) - 30.55;  // lengte linieare motor in cm is wortel(b^2+c^2 - 2*b*c*cos(hoek vleugel)) wanneer vleugel 0 graden is staat deze haaks op de boot dus 90graden. -3 omdat de vleugel hoger gemonteerd zit dan de linieare motor.
-  pulsen_liniear = afstand_liniear * pulsen_per_mm * 10;  // pulsen naar voorvleugel = afstand in cm maal pulsen per cm
+  afstand_liniear = (sqrt(43.2 * 43.2 + 17.2 * 17.2 - 2 * 43.2 * 17.2 * cos((hoek_voor_vleugel_manual / 10 + 90.0 - 3) * pi / 180.0))) - 30.55;  // lengte linieare motor in cm is wortel(b^2+c^2 - 2*b*c*cos(hoek vleugel)) wanneer vleugel 0 graden is staat deze haaks op de boot dus 90graden. -3 omdat de vleugel hoger gemonteerd zit dan de linieare motor.
+  pulsen_liniear = afstand_liniear * pulsen_per_mm * 10;                                                                                         // pulsen naar voorvleugel = afstand in cm maal pulsen per cm
   CAN_pulsen_voor = pulsen_liniear;
   //afstand_liniear_manual = afstand_liniear;
 }
@@ -1028,7 +1028,7 @@ void computePid_Avl() {
   pidAvlTotal = constrain(pidAvlTotal, hoek_home, 12.0);
 
   hoek_achter_vleugel = pitch - pidAvlTotal;
-  pulsen_liniear = (hoek_achter_vleugel - hoek_home) * 105.595;
+  pulsen_liniear = (hoek_achter_vleugel - hoek_home) * 105.595;  // pulsen per graden hoek
   CAN_pulsen_achter = pulsen_liniear;
   //Serial.print(CAN_pulsen_achter);
 }
@@ -1116,19 +1116,19 @@ void displayData() {
     online status: vvl & avl controller & homed?, gyroscoop, telemetrie en telemetrie online, gashendel en temperatuursensor
     */
     case Menu::MANUALLY:
-    lcd.setCursor(1, 1);
-    if(man_actief){
-      lcd.print F(("manual on "));
-    }else {
-      lcd.print F(("manual off"));
-    }
+      lcd.setCursor(1, 1);
+      if (man_actief) {
+        lcd.print F(("manual on "));
+      } else {
+        lcd.print F(("manual off"));
+      }
       lcd.setCursor(1, 2);
-      lcd.print F(("VVL "));  
+      lcd.print F(("VVL "));
       lcd.print(char(224));
-      lcd.print (hoek_voor_vleugel_manual/10);
-      lcd.print F(("    "));     
+      lcd.print(hoek_voor_vleugel_manual / 10);
+      lcd.print F(("    "));
       break;
-    
+
     case Menu::DEBUG:
       lcd.setCursor(13, 0);  // set curser at debug vvl place
       lcd.print F(("vvl: "));
@@ -1272,6 +1272,7 @@ void displayData() {
       } else if (P_Avl > -1.0) {
         lcd.print(" ");
       }
+      lcd.print(P_Avl * 10.0, 0);
 
       lcd.setCursor(4, 2);  // print I_Avl
       lcd.print(" I");
