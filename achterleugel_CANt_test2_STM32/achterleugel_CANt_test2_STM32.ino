@@ -1,7 +1,7 @@
 /* 
 Board managers needed:
 STM32 MCU based boards [https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json]
-Nucleo-64
+Nucleo-64, Board part number Nucleo F401RE
 */
 // Libraries:
 #include "DualVNH5019MotorShield.h"  // DualVNH5019MotorShield v3.0.0
