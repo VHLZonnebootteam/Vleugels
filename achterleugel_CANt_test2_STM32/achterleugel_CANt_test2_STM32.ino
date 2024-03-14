@@ -207,7 +207,7 @@ void loop() {
     last_amps_poll = timer;
     amps = amps * 0.96 + md.getM2CurrentMilliamps() * 0.04;
 
-    overcurrent_limit = (-3.8137 * PWM * PWM + 2456.2 * abs(PWM) + 159013) * 0.001 + 2500;  // was +3000
+    overcurrent_limit = (-3.8137 * PWM * PWM + 2456.2 * abs(PWM) + 159013) * 0.001 + 800;  // was +2500
     if (amps > overcurrent_limit) {
       overcurrent = true;
       md.setM2Brake(400);
