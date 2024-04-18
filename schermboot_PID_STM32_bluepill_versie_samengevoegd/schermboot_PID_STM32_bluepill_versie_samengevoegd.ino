@@ -131,7 +131,6 @@ bool man_actief = false;
 //int32_t afstand_liniear_manual;
 
 byte smile_happy[8] =
-
   {
     0b00000,
     0b00000,
@@ -144,7 +143,6 @@ byte smile_happy[8] =
   };
 
 byte smile_neutraal[8] =
-
   {
     0b00000,
     0b00000,
@@ -157,16 +155,15 @@ byte smile_neutraal[8] =
   };
 
 byte smile_sad[8] =
-
   {
-    0b11111,
-    0b11111,
-    0b10101,
-    0b11111,
-    0b11111,
-    0b10001,
+    0b00000,
+    0b00000,
+    0b01010,
+    0b00000,
+    0b00000,
     0b01110,
-    0b11111
+    0b10001,
+    0b00000
   };
 
 // data van CAN
@@ -1133,78 +1130,78 @@ void displayData() {
       lcd.setCursor(13, 0);  // set curser at debug vvl place
       lcd.print F(("vvl: "));
       if (status_Vvl) {
-        lcd.write(1);
+        lcd.write((byte)1);
       } else {
-        lcd.write(3);
+        lcd.write((byte)3);
       }
 
       lcd.setCursor(13, 1);  // set curser at debug avl place
       lcd.print F(("avl: "));
       if (status_Avl) {
-        lcd.write(1);
+        lcd.write((byte)1);
       } else {
-        lcd.write(3);
+        lcd.write((byte)3);
       }
 
       lcd.setCursor(6, 0);  // set curser at debug gyroscoop place
       lcd.print F(("gyro:"));
       if (status_gryo) {
-        lcd.write(1);
+        lcd.write((byte)1);
       } else {
-        lcd.write(3);
+        lcd.write((byte)3);
       }
 
       lcd.setCursor(0, 1);  // set curser at debug gashendel place
       lcd.print F(("Gas:"));
       if (status_gashendel) {
-        lcd.write(1);
+        lcd.write((byte)1);
       } else {
-        lcd.write(3);
+        lcd.write((byte)3);
       }
 
       lcd.setCursor(9, 2);  // set curser at homing vvl place
       lcd.print F(("HomeVvl:"));
 
       if (!home_front_foil && !has_homed_voor_vleugel) {  // if not homed
-        lcd.write(3);
+        lcd.write((byte)3);
       } else if (home_front_foil) {  // if homing
-        lcd.write(2);
+        lcd.write((byte)2);
       } else if (!home_front_foil && has_homed_voor_vleugel) {  // if homed
-        lcd.write(1);
+        lcd.write((byte)1);
       }
 
       lcd.setCursor(9, 3);  // set curser at homing vvl place
       lcd.print F(("HomeAvl:"));
       if (!home_rear_foil && !has_homed_achter_vleugel) {  // if not homed
-        lcd.write(3);
+        lcd.write((byte)3);
       } else if (home_rear_foil) {  // if homing
-        lcd.write(2);
+        lcd.write((byte)2);
       } else if (!home_rear_foil && has_homed_achter_vleugel) {  // if homed
-        lcd.write(1);
+        lcd.write((byte)1);
       }
 
       lcd.setCursor(6, 1);  // set curser at debug tempratuur sensor
       lcd.print F(("temp:"));
       if (status_temp) {
-        lcd.write(1);
+        lcd.write((byte)1);
       } else {
-        lcd.write(3);
+        lcd.write((byte)3);
       }
 
       lcd.setCursor(0, 3);  // status telemetrie server
       lcd.print F(("tlmWWW:"));
       if (status_telemetrie_verbinding_server) {
-        lcd.write(1);
+        lcd.write((byte)1);
       } else {
-        lcd.write(3);
+        lcd.write((byte)3);
       }
 
       lcd.setCursor(0, 2);  // status telemetrie CAN
       lcd.print F(("tlmCAN:"));
       if (status_telemetrie_verbinding_CAN) {
-        lcd.write(1);
+        lcd.write((byte)1);
       } else {
-        lcd.write(3);
+        lcd.write((byte)3);
       }
 
       break;
