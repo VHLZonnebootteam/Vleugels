@@ -130,17 +130,17 @@ void setup() {
   devStatus = mpu.dmpInitialize();
 
   // supply your own gyro offsets here, scaled for min sensitivity
-  mpu.setXGyroOffset(159);
-  mpu.setYGyroOffset(42);
-  mpu.setZGyroOffset(-87);
-  mpu.setXAccelOffset(-1934);
-  mpu.setYAccelOffset(-390);
-  mpu.setZAccelOffset(1320);
+  mpu.setXGyroOffset(150); 
+  mpu.setYGyroOffset(31);
+  mpu.setZGyroOffset(-83);
+  mpu.setXAccelOffset(-1690); // de accels bepalen de 3d ruimte waarin de gyro zich bevindt
+  mpu.setYAccelOffset(-384);
+  mpu.setZAccelOffset(1316);
   // make sure it worked (returns 0 if so)
   if (devStatus == 0) {
     // Calibration Time: generate offsets and calibrate our MPU6050
 
-    calibratie(); // uncomment calibratie(); om de offset te bepalen. vul de waarde hierboven in en comment calibratie zodat de waarde vast staat.
+   // calibratie(); // uncomment calibratie(); om de offset te bepalen. vul de waarde hierboven in en comment calibratie zodat de waarde vast staat.
     Serial.println();
     mpu.PrintActiveOffsets();
     // turn on the DMP, now that it's ready
